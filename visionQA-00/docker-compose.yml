@@ -1,0 +1,38 @@
+ # serviço do banco de dados postgresql
+services:
+  db:
+    image: postgres:15                
+    container_name: visionqa_db       # nome do container
+    environment:
+      POSTGRES_DB: visionqa           # nome do banco
+      POSTGRES_USER: postgres         # usuário
+      POSTGRES_PASSWORD: postgres     # senha
+    volumes:
+     
+      #  inicialização da pasta
+      - ./db:/docker-entrypoint-initdb.d
+    
+      # volume persistente para os dados do banco
+      - postgres_data:/var/lib/postgresql/data
+  
+    ports:
+      - "5432:5432"                   # mapeia porta do container para a máquina
+
+  # serviço da aplicação python
+  app:
+    build: ./app                      # constrói a imagem a partir do Dockerfile na pasta ./app
+    container_name: visionqa_app      # nome do container
+    environment:
+      DB_HOST: db                     
+      DB_PORT: 5432
+      DB_NAME: visionqa
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+    ports:
+      - "5000:5000"                   # mapeia porta da aplicação
+    depends_on:
+      - db                            # só sobe depois que o banco estiver pronto
+
+    # volume persistente compartilhado
+    volumes:
+    postgres_data:

@@ -1,0 +1,12 @@
+# processamento de imagens
+pillow
+
+# framework web
+flask
+
+# driver postgresql
+psycopg2-binary
+
+# cálculos numéricos
+numpy
+scipy
